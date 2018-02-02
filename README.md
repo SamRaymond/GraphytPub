@@ -22,14 +22,13 @@
 ## Building/Running the Code
 
 #### Obtaining the code
-The code can be obtained by either:
-- __Downloading it directly__ from Geogit as a compressed archive (e.g. zip file).
-- __Cloning the git repository__: using the command 
--  git clone git@geogit.mit.edu:sjr/Graphyt.git
+## Download
+Binaries can be downloaded directly from:
+https://github.com/MITGeonumerics/GraphytPub/releases 
 
-#### Compiling the code
-- Create a directory in the Graphyt root folder (eg. build), cd build and type "cmake ../"
-- Type make
+## Development
+If you are interested in developing the code, please contact us.
+
 
 #### Running the code
 - Make an output directory "output" in the same folder as the python scripts to run
