@@ -11,7 +11,6 @@
 Table of Contents
 =================
 
-* [API Documentation](#graphyt-api-documentation)
 * [Current Physics Supported](#current-physics-supported)
 * [Getting the Code](#getting-the-code)
     * [Download](#download)
@@ -35,7 +34,7 @@ Table of Contents
     * [Simulation Parameters](#simulation-parameters)
     * [Set Up I/O](#set-up-i/o)
     * [Solver ](#solver)
-    * [Example: 2D Dam Break](#example:-2d-dam-break)
+    * [Example: 2D Dam Break](#example-2d-dam-break)
 
 
 # Current Physics Supported:
@@ -237,7 +236,7 @@ holdParticle(​particle_index​)
 # Import the necessary modules
 import graphyt
 import pyck
-import VTPWriter
+import VTKWriter
 import math
 ## GEOMETRY ##
 
@@ -322,8 +321,8 @@ matpntMass = matpoints.getMassArr()
 matpntVel = matpoints.getVelArr()
 matpntStress = matpoints.getStressArr()
 Le = [1+int(L[0]/cellsize), 1+int(L[1]/cellsize), 1+int(L[2]/cellsize)]
-vtp = VTPWriter.VTPWriter(Le,cellsize,numParticles)
-vtp.AddArray("Position", matpntPos,3, 2)
+vtp = VTKWriter.VTPWriter(Le,cellsize,numParticles)
+vtp.AddPositions("Position", matpntPos,3, 2)
 vtp.AddArray("Material", matpntMat,1, 2)
 vtp.AddArray("Mass", matpntMass,1, 2)
 vtp.AddArray("Velocity",matpntVel,3, 2)

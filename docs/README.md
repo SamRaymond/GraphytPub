@@ -8,7 +8,36 @@
 - __OpenMP__ Parallel Processing
 - __VTP/VTI/CSV__ output formats (some require additional libraries - see below), can be viewed in ParaView
 
-## Current Physics Supported:
+Table of Contents
+=================
+
+* [Current Physics Supported](#current-physics-supported)
+* [Getting the Code](#getting-the-code)
+    * [Download](#download)
+    * [Development](#development)
+* [Running a Simulation](#running-a-simulation)
+* [Code Features](#code-features)
+* [Creating Visualisations in Houdini](#creating-visualisations-in-houdini)
+* [Graphyt API Documentation](#graphyt-api-documentation)
+    * [Python Modules](#python-modules)
+    * [Domain and Resolution](#domain-and-resolution)
+    * [Material Points and Nodes](#material-points-and-nodes)
+    * [Defining Materials](#defining-materials)
+    * [Material Models ](#material-models)
+    * [Damage Models](#damage-models)
+    * [Geometry](#geometry)
+    * [PYCK](#pyck)
+    * [non-PYCK](#non-pyck)
+    * [Boundary/Initial Conditions](#boundaryinitial-conditions)
+    * [Nodes](#nodes)
+    * [Material Points](#material-points)
+    * [Simulation Parameters](#simulation-parameters)
+    * [Set Up I/O](#set-up-i/o)
+    * [Solver ](#solver)
+    * [Example: 2D Dam Break](#example-2d-dam-break)
+
+
+# Current Physics Supported:
 - Solid Mechanics: small strain theory
     - Plasticity: Drucker-Prager, Perfect
     - Damage: Grady-Kipp
@@ -19,9 +48,8 @@
 - Thermal conductivity
 
 
-## Building/Running the Code
+# Getting the Code
 
-#### Obtaining the code
 ## Download
 Binaries can be downloaded directly from:
 https://github.com/MITGeonumerics/GraphytPub/releases 
@@ -29,22 +57,19 @@ https://github.com/MITGeonumerics/GraphytPub/releases
 ## Development
 If you are interested in developing the code, please contact us.
 
-#### Compiling the code
-- Create a directory in the Graphyt root folder (eg. build), cd build and type "cmake ../"
-- Type make
 
-#### Running the code
+# Running a Simulation
 - Make an output directory "output" in the same folder as the python scripts to run
 - Create a python script of the model
 - Type "python nameOfScript.py" in the terminal
 
-## Code Features
+# Code Features
  - __Interpolation__ is based on simple GIMP implementation 
  - __Boundary Conditions__ can be applied to particles (vel, stress, force(accel)) and nodes (vel, force). Currently only one BC type per particle/node
  - __Domain__ is periodic by default, for finite simulations, nodal BCs can be applied within 2 cells of the domain extent defined in the scripts
 
 
- ## Creating Visualisations in Houdini
+ # Creating Visualisations in Houdini
  - Output data using VTI file format
  - Open files in Paraview:
                         - Create a 'threshold'
@@ -55,8 +80,7 @@ If you are interested in developing the code, please contact us.
 
 
 # Graphyt API Documentation
-## MPM Simulation Engine
-# Python Modules
+## Python Modules
 Python modules are required for a graphyt script. Aside from the graphyt module, for more complex geometries, pyck (detailed below) may be used, for visualization, the VTKWriter module (also detailed below) should be included. 
 ```python
 import graphyt
@@ -64,7 +88,7 @@ import pyck  # if using pyck for geometry
 import VTKWriter # for writing output files
 ```
 
-# Domain and Resolution
+## Domain and Resolution
 To initialize the background grid within which MPM simulations occur, the domain and resolution need to be defined:
 ```
 L        = [Lx,Ly,Lz] # Lx,y,z are the lengths of the grid
@@ -74,14 +98,14 @@ cellsize = dx # This is the distance between the nodes
 psep     = dx / 2 # This is the distance between particles
                     (optimal value is dx/2)
 ```
-# Material Points and Nodes
+## Material Points and Nodes
 The nodes and material points' properties are controlled and contained in the graphyt.Nodes and graphyt.MaterialPoints python object. They require some input values during creation as shown below.
 ```python
 nodes     = graphyt.Nodes([Lx,Ly,Lz], cellsize)
 matpoints = graphyt.MaterialPoints(nodes)
 ```
 These objects are used for the majority of the rest of the simulation process. 
-# Defining Materials
+## Defining Materials
 
 A number of material models are available in graphyt. To define a material, the format follows the same pattern:<br/>
 ```python
@@ -139,21 +163,43 @@ ___
 # Add the material to a materials array, more than one material can be defined
     materials = [material_1]
 ```
-# Geometry
-#PYCK
+## Geometry
+##PYCK
 *required
     objectID, materialID
 ```python
 
 ```
-# non-PYCK (matpoints.add())
+## non-PYCK (matpoints.add())
 *required
     objectID, materialID
 ```python
 
 ```
 
-# Boundary/Initial Conditions
+## Boundary/Initial Conditions
+### Material Points
+#### Setting Particle Values
+Initializing particle properties. These commands will set particle properties for the time step they are applied. For example, if set at the beginning of the simulation they are initial conditions. Once set these values are free to change with the dynamics of the system. For persistent values the user can either set these values for each timestep or it may be more appropriate to use the Boundary Conditions (see the Particle Boundary Conditions section).
+```python
+​setVel​(​particle_index, vx,​ ​vy, vz)
+#For the given particle_index, that particle's velocity-vector is set to: [vx,vy,vz]
+setDamage(​​​particle_index,​ damage_value​)
+#For the given particle_index, that particle's damage value is set to: damage_value 
+setStress(​particle_index​,​sxx,syy,szz,sxy,syz,sxz)​
+#For the given particle_index, that particle's stress-tensor is set to:
+#[sxx, sxy, sxz
+# sxy, syy, syz
+# sxz, syz, szz] 
+setTemp(​particle_index​, ​Temperature​)
+#For the given particle_index, that particle's temperature is set to: Temperature
+holdParticle(​particle_index​)
+#For the given particle_index, this particle's position is not updated, it stays fixed in place. Note for rigid particles, see the Materials section.
+#### Setting Particle Boundary Conditions
+```
+
+
+### Nodes
 ## Nodes
 *required
     `node.setBC(nodeID,graphyt.BCTypes.grid_type,[vals])`
@@ -164,14 +210,14 @@ ___
 ```python
 
 ```    
-# Simulation Parameters
+## Simulation Parameters
 *required
     `is3D,tmax, graphyt.Parameters(max,is3D)`
 ```python
 
 ```
 
-# Set Up I/O
+## Set Up I/O
 *required
     set arrays, `VTPWriter.VTPWriter(L,cellsize,numParticles)`
 ```python
@@ -185,12 +231,12 @@ ___
 ```python
 
 ```
-# Example: 2D Dam Break
+## Example: 2D Dam Break
 ```python
 # Import the necessary modules
 import graphyt
 import pyck
-import VTPWriter
+import VTKWriter
 import math
 ## GEOMETRY ##
 
@@ -275,8 +321,8 @@ matpntMass = matpoints.getMassArr()
 matpntVel = matpoints.getVelArr()
 matpntStress = matpoints.getStressArr()
 Le = [1+int(L[0]/cellsize), 1+int(L[1]/cellsize), 1+int(L[2]/cellsize)]
-vtp = VTPWriter.VTPWriter(Le,cellsize,numParticles)
-vtp.AddArray("Position", matpntPos,3, 2)
+vtp = VTKWriter.VTPWriter(Le,cellsize,numParticles)
+vtp.AddPositions("Position", matpntPos,3, 2)
 vtp.AddArray("Material", matpntMat,1, 2)
 vtp.AddArray("Mass", matpntMass,1, 2)
 vtp.AddArray("Velocity",matpntVel,3, 2)
