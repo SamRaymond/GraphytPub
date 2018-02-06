@@ -51,8 +51,8 @@ Table of Contents
 # Getting the Code
 
 ## Download
-Binaries can be downloaded directly from:
-https://github.com/MITGeonumerics/GraphytPub/releases 
+Binaries can be downloaded [here](https://github.com/MITGeonumerics/GraphytPub/releases):
+
 
 ## Development
 If you are interested in developing the code, please contact us.
