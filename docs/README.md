@@ -1,5 +1,5 @@
 # Graphyt: A 3D MPM code for continuum simulations
- [![alt text](http://csm.mech.utah.edu/content/wp-content/uploads/2012/03/UpdatedLagrangeStepOnRectilinearGrid-300x242.png)] (http://csm.mech.utah.edu/content/wp-content/uploads/2012/03/UpdatedLagrangeStepOnRectilinearGrid-300x242.png "Title")
+ [(https://youtu.be/Qytx6ZNdFF4)]
 ## Highlights
 - __Python__ Interface for flexible and fast input scripting
 - __Pyck__ Support for pre-preocessing
