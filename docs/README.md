@@ -1,5 +1,5 @@
 # Graphyt: A 3D MPM code for continuum simulations
-
+ [![alt text](/wp-smaller.png)] (http://wordpress.com/ "Title")
 ## Highlights
 - __Python__ Interface for flexible and fast input scripting
 - __Pyck__ Support for pre-preocessing
